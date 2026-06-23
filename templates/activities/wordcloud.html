@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Camp WordCloud | Mediatiz Summer Camp{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/activities.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="activity-container">
+    <div class="activity-header">
+        <div>
+            <span class="badge" style="margin-bottom: 8px;">Activity</span>
+            <h1 style="font-size: 1.8rem; color: #ffffff;">Feedback WordCloud</h1>
+        </div>
+        <a href="/student/dashboard" class="activity-back-link">
+            <i class="fas fa-arrow-left"></i> Dashboard
+        </a>
+    </div>
+
+    <div class="wordcloud-layout">
+        <!-- Word Cloud Graphical Box -->
+        <div class="glass-panel">
+            <div id="wordcloudDisplay" class="wordcloud-display">
+                <!-- Rendered dynamically by javascript -->
+                <div class="wordcloud-empty">Loading WordCloud...</div>
+            </div>
+        </div>
+
+        <!-- Submission form box -->
+        <div class="glass-panel wordcloud-input-panel">
+            <h3 style="font-size: 1.2rem; color: #ffffff; margin-bottom: 12px; text-align: center;">Add Your Keyword</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; margin-bottom: 20px;">
+                Submit any coding topic, technology, or camp feedback. Students earn <strong style="color: var(--success);">+5 points</strong> per keyword submitted!
+            </p>
+            
+            <form id="wordCloudForm" style="display: flex; gap: 12px;">
+                <input type="text" id="wordInput" class="form-control" placeholder="e.g. JavaScript, Fun, Logic" required maxlength="20" autocomplete="off" style="flex-grow: 1;">
+                <button type="submit" id="submitWordBtn" class="btn btn-primary" style="padding: 10px 24px;">
+                    <i class="fas fa-paper-plane"></i> Add
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const display = document.getElementById('wordcloudDisplay');
+    const form = document.getElementById('wordCloudForm');
+    const input = document.getElementById('wordInput');
+    const submitBtn = document.getElementById('submitWordBtn');
+    
+    // Fetch and draw word cloud
+    async function loadCloud() {
+        try {
+            const response = await fetch('/api/wordcloud/words');
+            const words = await response.json();
+            drawWordCloud(words);
+        } catch (err) {
+            console.error("Error loading wordcloud", err);
+            display.innerHTML = '<div class="wordcloud-empty" style="color: var(--danger);">Failed to load WordCloud.</div>';
+        }
+    }
+    
+    function drawWordCloud(words) {
+        display.innerHTML = '';
+        
+        if (words.length === 0) {
+            display.innerHTML = '<div class="wordcloud-empty">Submit a word to start building the cloud!</div>';
+            return;
+        }
+        
+        const width = display.clientWidth;
+        const height = display.clientHeight;
+        
+        const weights = words.map(w => w.weight);
+        const minWeight = Math.min(...weights);
+        const maxWeight = Math.max(...weights);
+        
+        words.forEach(word => {
+            const node = document.createElement('span');
+            node.className = 'wordcloud-node floating-word';
+            node.innerText = word.text;
+            
+            // Calculate size between 14px and 44px
+            let fontSize = 16;
+            if (maxWeight > minWeight) {
+                fontSize = 14 + ((word.weight - minWeight) / (maxWeight - minWeight)) * 30;
+            }
+            node.style.fontSize = `${fontSize}px`;
+            
+            // Pick a random vibrant color (hues: Blue/Teal/Purple/Green/Pink)
+            const hues = [160, 190, 220, 260, 290, 320];
+            const randomHue = hues[Math.floor(Math.random() * hues.length)];
+            node.style.color = `hsl(${randomHue}, 80%, 75%)`;
+            
+            // Add shadow glow matching color
+            node.style.textShadow = `0 0 10px hsl(${randomHue}, 80%, 25%)`;
+            
+            display.appendChild(node);
+            
+            // Position coordinates (keeping inside box boundary)
+            const nodeWidth = node.offsetWidth;
+            const nodeHeight = node.offsetHeight;
+            
+            const x = Math.max(15, Math.floor(Math.random() * (width - nodeWidth - 30)));
+            const y = Math.max(15, Math.floor(Math.random() * (height - nodeHeight - 30)));
+            
+            node.style.left = `${x}px`;
+            node.style.top = `${y}px`;
+            node.style.animationDelay = `${Math.random() * 2}s`;
+        });
+    }
+    
+    // Submit form action
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const word = input.value.trim();
+        if (!word) return;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+        
+        try {
+            const response = await fetch('/api/wordcloud/words', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ word: word })
+            });
+            const data = await response.json();
+            if (data.success) {
+                input.value = '';
+                showToast(`Word added! You earned +5 points.`, 'success');
+                drawWordCloud(data.words);
+            }
+        } catch (err) {
+            console.error("Failed to submit word", err);
+            showToast("Failed to submit word", "error");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Add';
+        }
+    });
+    
+    // Initial load
+    loadCloud();
+    
+    // Re-draw when window is resized to align layout
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            loadCloud();
+        }, 300);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mediatiz Summer Camp{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- FontAwesome for beautiful icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-size/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Base Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-campground"></i> MEDIATIZ CAMP
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/leaderboard" class="nav-link">Leaderboard</a></li>
+                
+                {% if session.role == 'student' %}
+                    <li><a href="/student/dashboard" class="nav-link">Dashboard</a></li>
+                    <li><a href="/logout" class="btn btn-secondary btn-sm" style="padding: 6px 12px; font-size: 0.8rem;">Leave Camp</a></li>
+                {% elif session.role == 'instructor' %}
+                    <li><a href="/instructor/dashboard" class="nav-link">Instructor Panel</a></li>
+                    <li><a href="/logout" class="btn btn-secondary btn-sm" style="padding: 6px 12px; font-size: 0.8rem;">Logout</a></li>
+                {% else %}
+                    <li><a href="/join" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem;">Join Camp</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <!-- Flash Alerts -->
+    <div class="alerts">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'error' if category == 'error' else 'info' }}">
+                        {% if category == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif category == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% else %}
+                            <i class="fas fa-info-circle"></i>
+                        {% endif %}
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Mediatiz Summer Camp. Engineered with <i class="fas fa-heart" style="color: var(--danger)"></i> for Future Coders.</p>
+    </footer>
+
+    <!-- Global JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

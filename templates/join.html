@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Join the Camp | Mediatiz Summer Camp{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 40px auto;">
+    <div class="glass-panel">
+        <h2 style="font-size: 1.8rem; margin-bottom: 8px; color: #ffffff; text-align: center;">Enter Summer Camp</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; text-align: center; margin-bottom: 30px;">
+            Input your details below to get registered and start participating.
+        </p>
+        
+        <form action="/join" methods="POST" method="POST">
+            <div class="form-group">
+                <label for="name" class="form-label">Your Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="camp_code" class="form-label">Camp Code</label>
+                <input type="text" id="camp_code" name="camp_code" class="form-control" placeholder="e.g. CAMP2026" required autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="level" class="form-label">Skill Level</label>
+                <select id="level" name="level" class="form-control">
+                    <option value="Beginner">Beginner (HTML & CSS)</option>
+                    <option value="Intermediate">Intermediate (JavaScript & Python)</option>
+                    <option value="Advanced">Advanced (Databases & APIs)</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">
+                <i class="fas fa-sign-in-alt"></i> Start Camp Adventure
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block title %}Instructor Panel | Mediatiz Camp{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+{% if login_view %}
+<!-- Instructor Login Form -->
+<div style="max-width: 450px; margin: 40px auto;">
+    <div class="glass-panel">
+        <h2 style="font-size: 1.8rem; margin-bottom: 8px; color: #ffffff; text-align: center;">Instructor Sign In</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; text-align: center; margin-bottom: 24px;">
+            Access camp control panel to spin the wheel and award points.
+        </p>
+        
+        <form action="/instructor/login" method="POST">
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="instructor@mediatiz.com" required autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Secret Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="off">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">
+                <i class="fas fa-lock-open"></i> Authenticate
+            </button>
+        </form>
+        
+        <div style="margin-top: 20px; text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+            <p>Demo Credentials:</p>
+            <p style="color: var(--text-secondary);">email: <code>instructor@mediatiz.com</code> / password: <code>password123</code></p>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Main Instructor Workstation Dashboard -->
+<div class="instructor-title-row">
+    <div>
+        <h1 style="font-size: 2.2rem; color: #ffffff;">Instructor Workstation</h1>
+        <p style="color: var(--text-secondary);">Oversee active camper statistics, run activities, and allocate scores.</p>
+    </div>
+    <div>
+        <a href="/activity/hotseat" class="btn btn-primary">
+            <i class="fas fa-dharmachakra"></i> Open HotSeat Spinner
+        </a>
+    </div>
+</div>
+
+<div class="instructor-grid" style="margin-top: 30px;">
+    <!-- Column Left: Score Adjuster Form -->
+    <div>
+        <div class="glass-panel action-box">
+            <h4><i class="fas fa-medal"></i> Award Bonus Points</h4>
+            <form id="awardPointsForm">
+                <div class="form-group">
+                    <label for="studentSelect" class="form-label">Select Camper</label>
+                    <select id="studentSelect" name="student_id" class="form-control" required>
+                        <option value="">-- Choose student --</option>
+                        {% for student in students %}
+                            <option value="{{ student.id }}">{{ student.name }} ({{ student.level }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label for="pointAmount" class="form-label">Points Value</label>
+                        <input type="number" id="pointAmount" name="points" class="form-control" value="15" min="-100" max="100" required>
+                    </div>
+                    <div>
+                        <label for="eventType" class="form-label">Award Category</label>
+                        <select id="eventType" name="event_type" class="form-control">
+                            <option value="Instructor Award">Instructor Bonus</option>
+                            <option value="Quiz">Quiz Extra</option>
+                            <option value="Wheel">Wheel Winner</option>
+                            <option value="Code Review">Code Review</option>
+                            <option value="Participation">Participation</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="descriptionText" class="form-label">Description Note</label>
+                    <input type="text" id="descriptionText" name="description" class="form-control" placeholder="e.g. Excellent solution design!" required autocomplete="off">
+                </div>
+                
+                <button type="submit" id="submitPointsBtn" class="btn btn-primary btn-block">
+                    <i class="fas fa-plus-circle"></i> Grant Award
+                </button>
+            </form>
+        </div>
+        
+        <!-- Quick Activities Panel -->
+        <div class="glass-panel">
+            <h4 style="color: #ffffff; margin-bottom: 16px;"><i class="fas fa-play"></i> Activities Control</h4>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px;">
+                    <div>
+                        <strong style="display: block; color: #fff;">Launch Quiz Challenge</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Direct campers to play BrainBuzz Quiz</span>
+                    </div>
+                    <a href="/activity/brainbuzz" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">Test Quiz</a>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px;">
+                    <div>
+                        <strong style="display: block; color: #fff;">Open Collaborative Feedback</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Camper wordcloud submittals</span>
+                    </div>
+                    <a href="/activity/wordcloud" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">WordCloud</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Column Right: Active Campers and Log -->
+    <div>
+        <div class="glass-panel" style="margin-bottom: 30px;">
+            <h4 style="color: #ffffff; margin-bottom: 16px;"><i class="fas fa-users"></i> Registered Campers ({{ students|length }})</h4>
+            <div style="max-height: 250px; overflow-y: auto; padding-right: 8px;">
+                {% if students %}
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border-color); text-align: left; color: var(--text-secondary);">
+                                <th style="padding: 8px 4px;">Name</th>
+                                <th style="padding: 8px 4px;">Level</th>
+                                <th style="padding: 8px 4px; text-align: right;">Total Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in students %}
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.02);">
+                                    <td style="padding: 8px 4px; color: #fff; font-weight: 500;">{{ s.name }}</td>
+                                    <td style="padding: 8px 4px; color: var(--text-secondary);">{{ s.level }}</td>
+                                    <td style="padding: 8px 4px; text-align: right; font-weight: bold; color: var(--accent);">{{ s.total_score }} pts</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p style="color: var(--text-muted); text-align: center; padding: 20px 0;">No campers registered yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="glass-panel">
+            <h4 style="color: #ffffff; margin-bottom: 16px;"><i class="fas fa-list-ul"></i> Camp point feed log</h4>
+            <div class="instructor-feed">
+                {% if events %}
+                    <ul class="history-list">
+                        {% for event in events %}
+                            <li class="history-item" style="background: rgba(255,255,255,0.01);">
+                                <div>
+                                    <span class="history-desc"><span class="user-tag">{{ event.student_name }}</span>: {{ event.description }}</span>
+                                    <span class="history-type">{{ event.event_type }}</span>
+                                </div>
+                                <span class="history-points {{ 'points-plus' if event.points >= 0 else 'points-minus' }}">
+                                    {{ '+' if event.points >= 0 }}{{ event.points }} pts
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p style="color: var(--text-muted); text-align: center; padding: 20px 0;">No points logs recorded.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if not login_view %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('awardPointsForm');
+    const submitBtn = document.getElementById('submitPointsBtn');
+    
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
+            
+            const student_id = document.getElementById('studentSelect').value;
+            const points = document.getElementById('pointAmount').value;
+            const event_type = document.getElementById('eventType').value;
+            const description = document.getElementById('descriptionText').value;
+            
+            try {
+                const response = await fetch('/api/award-points', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        student_id: student_id,
+                        points: points,
+                        event_type: event_type,
+                        description: description
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    showToast('Points awarded successfully!', 'success');
+                    // Reload page to reflect score logs and table entries immediately
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1200);
+                } else {
+                    showToast(data.error || 'Failed to award points.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Grant Award';
+                }
+            } catch (err) {
+                console.error("Error making award request", err);
+                showToast("Request failed", "error");
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Grant Award';
+            }
+        });
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

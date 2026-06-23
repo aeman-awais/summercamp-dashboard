@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome | Mediatiz Summer Camp Platform{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <span class="badge">Registration Open</span>
+    <h1 class="hero-title">Mediatiz Summer Camp<br>Coding Platform 2026</h1>
+    <p class="hero-subtitle">
+        Embark on an interactive adventure! Solve quizzes, participate in live wheel spins, build word clouds, and claim your spot at the top of the leaderboard.
+    </p>
+    <div class="hero-buttons">
+        {% if session.role == 'student' %}
+            <a href="/student/dashboard" class="btn btn-primary">
+                <i class="fas fa-columns"></i> Go to Dashboard
+            </a>
+        {% else %}
+            <a href="/join" class="btn btn-primary">
+                <i class="fas fa-rocket"></i> Join Camp Now
+            </a>
+        {% endif %}
+        <a href="/leaderboard" class="btn btn-secondary">
+            <i class="fas fa-trophy"></i> View Leaderboard
+        </a>
+    </div>
+</section>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="glass-panel stat-card">
+        <div class="stat-val">{{ stats.students }}</div>
+        <div class="stat-lbl">Active Campers</div>
+    </div>
+    
+    <div class="glass-panel stat-card">
+        <div class="stat-val">{{ stats.points }}</div>
+        <div class="stat-lbl">Points Awarded</div>
+    </div>
+    
+    <div class="glass-panel stat-card">
+        <div class="stat-val">3</div>
+        <div class="stat-lbl">Live Activities</div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | {{ student.name }} | Mediatiz Camp{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="glass-panel welcome-panel">
+    <div class="welcome-text">
+        <h1>Welcome Back, {{ student.name }}!</h1>
+        <p>Your skill level is registered as <strong style="color: var(--primary);">{{ student.level }}</strong>.</p>
+    </div>
+    <div style="font-size: 3rem; color: var(--primary); opacity: 0.8; display: none;">
+        <i class="fas fa-user-astronaut"></i>
+    </div>
+</div>
+
+<!-- Score stats grid -->
+<div class="score-cards-grid">
+    <div class="glass-panel score-card score-total">
+        <div class="score-card-value">{{ student.total_score }}</div>
+        <div class="score-card-label">Total Points</div>
+    </div>
+    <div class="glass-panel score-card score-today">
+        <div class="score-card-value">{{ student.today_score }}</div>
+        <div class="score-card-label">Today's Points</div>
+    </div>
+    <div class="glass-panel score-card score-rank">
+        <div class="score-card-value">#{{ rank }}</div>
+        <div class="score-card-label">Rank Position</div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <!-- Left Column: Activities -->
+    <div>
+        <h2 class="activities-title">Camp Activities</h2>
+        <div class="activities-grid">
+            
+            <!-- Activity 1: BrainBuzz -->
+            <div class="glass-panel activity-card">
+                <div class="activity-badge"><i class="fas fa-brain"></i> Quiz Challenge</div>
+                <h3>BrainBuzz Quiz</h3>
+                <p>Test your knowledge with 5 timed multiple choice questions based on your skill level. Earn 10 points per correct answer!</p>
+                <a href="/activity/brainbuzz" class="btn btn-primary">
+                    <i class="fas fa-gamepad"></i> Play Quiz
+                </a>
+            </div>
+
+            <!-- Activity 2: HotSeat -->
+            <div class="glass-panel activity-card">
+                <div class="activity-badge"><i class="fas fa-dharmachakra"></i> Selector Wheel</div>
+                <h3>HotSeat Selector</h3>
+                <p>Are you in the HotSeat? View the live selector wheel used by instructors to pick students for special answers and bonus awards!</p>
+                <a href="/activity/hotseat" class="btn btn-secondary">
+                    <i class="fas fa-eye"></i> View Wheel
+                </a>
+            </div>
+
+            <!-- Activity 3: WordCloud -->
+            <div class="glass-panel activity-card">
+                <div class="activity-badge"><i class="fas fa-cloud"></i> Word Map</div>
+                <h3>Feedback WordCloud</h3>
+                <p>Contribute keywords, ideas, and tags to compile our collaborative live word cloud. Get 5 points for each unique entry!</p>
+                <a href="/activity/wordcloud" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> Submit Keyword
+                </a>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Right Column: Feed -->
+    <div>
+        <div class="glass-panel history-panel" style="height: 100%;">
+            <h3>Recent Score Activity</h3>
+            
+            {% if history %}
+                <ul class="history-list">
+                    {% for event in history %}
+                        <li class="history-item">
+                            <div>
+                                <span class="history-desc">{{ event.description }}</span>
+                                <span class="history-type">{{ event.event_type }} &bull; {{ event.timestamp.split(' ')[1] if ' ' in event.timestamp else 'Just Now' }}</span>
+                            </div>
+                            <span class="history-points {{ 'points-plus' if event.points >= 0 else 'points-minus' }}">
+                                {{ '+' if event.points >= 0 }}{{ event.points }} pts
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">No score events yet. Start an activity to earn points!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

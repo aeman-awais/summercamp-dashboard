@@ -1,0 +1,197 @@
+/* Leaderboard Page Specific Styles */
+
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.leaderboard-title {
+    font-size: 2.2rem;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ffffff 40%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Level Filters Buttons */
+.filter-tabs {
+    display: flex;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    padding: 4px;
+    border-radius: 10px;
+    gap: 4px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    font-family: 'Outfit', sans-serif;
+}
+
+.filter-btn:hover {
+    color: var(--text-primary);
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+}
+
+/* Leaderboard Table Grid */
+.leaderboard-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.leaderboard-table th {
+    padding: 16px 20px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.leaderboard-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+.leaderboard-row {
+    transition: var(--transition-smooth);
+}
+
+.leaderboard-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Rank Styling */
+.rank-badge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    font-weight: 700;
+    border-radius: 50%;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+}
+
+.rank-1 {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #000000;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}
+
+.rank-2 {
+    background: linear-gradient(135deg, #e5e7eb, #9ca3af);
+    color: #000000;
+    box-shadow: 0 0 12px rgba(229, 231, 235, 0.3);
+}
+
+.rank-3 {
+    background: linear-gradient(135deg, #b45309, #78350f);
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(180, 83, 9, 0.3);
+}
+
+.rank-normal {
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+/* Student Info */
+.student-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: var(--primary);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Outfit', sans-serif;
+}
+
+.student-name {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* Level Badges */
+.level-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.level-beginner {
+    background: rgba(16, 185, 129, 0.1);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.level-intermediate {
+    background: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.level-advanced {
+    background: rgba(139, 92, 246, 0.1);
+    color: #a78bfa;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.points-val {
+    font-weight: 700;
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+}
+
+.empty-leaderboard {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--text-secondary);
+}
+
+.empty-leaderboard i {
+    font-size: 3rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
