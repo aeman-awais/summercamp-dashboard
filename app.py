@@ -81,11 +81,17 @@ def init_db():
             if os.path.exists(schema_path):
                 with open(schema_path, 'r', encoding='utf-8') as f:
                     schema_sql = f.read()
-                # Adapt MySQL schema file to SQLite
-                statements = schema_sql.split(';')
+                # Strip comments line by line first to prevent statements from being skipped
+                clean_lines = []
+                for line in schema_sql.split('\n'):
+                    if not line.strip().startswith('--'):
+                        clean_lines.append(line)
+                clean_schema_sql = '\n'.join(clean_lines)
+                
+                statements = clean_schema_sql.split(';')
                 for statement in statements:
                     stmt = statement.strip()
-                    if not stmt or stmt.startswith('--'):
+                    if not stmt:
                         continue
                     if 'CREATE DATABASE' in stmt or 'USE ' in stmt:
                         continue
@@ -124,6 +130,42 @@ def init_db():
             conn.close()
         except Exception as e:
             print(f"MySQL initialization connection skipped/failed: {e}")
+
+    # Seed default quiz questions if none exist
+    try:
+        questions_count = query_db("SELECT COUNT(*) as cnt FROM quiz_questions", one=True)
+        if questions_count and questions_count['cnt'] == 0:
+            print("Seeding quiz questions...")
+            default_questions = [
+                # Beginner (HTML & CSS)
+                ("What does HTML stand for?", "Hyper Text Markup Language", "High Tech Modern Language", "Hyperlink and Text Markup Language", "Home Tool Markup Language", "A", "Beginner"),
+                ("Which CSS property is used to change the text color?", "text-color", "color", "font-color", "background-color", "B", "Beginner"),
+                ("Which HTML element is used to define the most important heading?", "<head>", "<h6>", "<heading>", "<h1>", "D", "Beginner"),
+                ("How do you make a list that lists items with numbers?", "<ol>", "<ul>", "<list>", "<dl>", "A", "Beginner"),
+                ("What is the correct CSS syntax to make all <p> elements bold?", "p {text-size: bold;}", "p {font-weight: bold;}", "p {font-style: bold;}", "p {font: bold;}", "B", "Beginner"),
+                
+                # Intermediate (JavaScript & Python)
+                ("How do you write 'Hello World' in an alert box in JavaScript?", "msgBox('Hello World');", "alert('Hello World');", "msg('Hello World');", "alertBox('Hello World');", "B", "Intermediate"),
+                ("Which python method is used to add an item to the end of a list?", "add()", "insert()", "append()", "push()", "C", "Intermediate"),
+                ("How do you create a function in Python?", "def myFunction():", "function myFunction()", "create myFunction()", "define myFunction()", "A", "Intermediate"),
+                ("In JavaScript, what is the output of 'typeof []'?", "\"array\"", "\"object\"", "\"list\"", "\"undefined\"", "B", "Intermediate"),
+                ("Which loop is used to execute a block of code a specific number of times?", "for loop", "while loop", "loop-until", "do-while loop", "A", "Intermediate"),
+                
+                # Advanced (Databases & APIs)
+                ("What does SQL stand for?", "Structured Query Language", "Simple Query Language", "Statement Question Language", "Structured Question Layout", "A", "Advanced"),
+                ("Which HTTP method is typically used to update an existing resource?", "GET", "POST", "PUT", "DELETE", "C", "Advanced"),
+                ("Which clause in SQL is used to filter records in a group?", "WHERE", "HAVING", "GROUP BY", "ORDER BY", "B", "Advanced"),
+                ("What is JSON?", "JavaScript Object Notation", "Java System Online Network", "Joint Source Object Namespace", "JavaScript Online Node", "A", "Advanced"),
+                ("What does a 404 HTTP status code represent?", "Unauthorized Access", "Server Error", "Success", "Resource Not Found", "D", "Advanced")
+            ]
+            for q in default_questions:
+                query_db(
+                    "INSERT INTO quiz_questions (question_text, option_a, option_b, option_c, option_d, correct_option, difficulty) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    q
+                )
+            print("Successfully seeded 15 quiz questions.")
+    except Exception as e:
+        print(f"Error seeding quiz questions: {e}")
 
 # Helper to find rank
 def get_student_rank(student_id):
@@ -176,6 +218,7 @@ def join():
             session['student_id'] = student_id
             session['student_name'] = name
             session['role'] = 'student'
+            session['student_level'] = level
             flash(f'Welcome to Mediatiz, {name}!', 'success')
             return redirect(url_for('student_dashboard'))
         else:
@@ -195,6 +238,7 @@ def student_dashboard():
         session.clear()
         return redirect(url_for('join'))
         
+    session['student_level'] = student['level']
     rank = get_student_rank(student['id'])
     
     # Load point events

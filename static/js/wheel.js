@@ -112,6 +112,11 @@ function spin() {
     spinBtn.disabled = true;
     wheelResultSpan.style.display = 'none';
     
+    const actionContainer = document.getElementById('instructorActionContainer');
+    if (actionContainer) {
+        actionContainer.style.display = 'none';
+    }
+    
     spinAngleStart = Math.random() * 10 + 10;
     spinTime = 0;
     spinTimeTotal = Math.random() * 3000 + 4000; // 4 to 7 seconds spin
@@ -149,6 +154,59 @@ function stopRotateWheel() {
     wheelResultSpan.style.display = 'inline-block';
     
     showToast(`Congrats to ${winner.name}! You are in the HotSeat!`, 'success');
+
+    // Show instructor points shortcut if role is instructor and winner is a registered student
+    const wrapper = document.getElementById('wheelWrapper');
+    const role = wrapper ? wrapper.dataset.role : '';
+    const actionContainer = document.getElementById('instructorActionContainer');
+    const actionBtn = document.getElementById('awardWinnerBtn');
+    const actionName = document.getElementById('awardWinnerName');
+
+    if (role === 'instructor' && winner && winner.id && actionContainer && actionBtn && actionName) {
+        actionName.innerText = winner.name;
+        actionContainer.style.display = 'block';
+        
+        // Remove existing listeners by cloning the button
+        const newActionBtn = actionBtn.cloneNode(true);
+        actionBtn.parentNode.replaceChild(newActionBtn, actionBtn);
+        
+        newActionBtn.addEventListener('click', async () => {
+            newActionBtn.disabled = true;
+            newActionBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Awarding...';
+            
+            try {
+                const response = await fetch('/api/award-points', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        student_id: winner.id,
+                        points: 15,
+                        event_type: 'Wheel',
+                        description: 'Selected on the HotSeat Wheel!'
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showToast(`Awarded 15 points to ${winner.name}!`, 'success');
+                    newActionBtn.innerHTML = '<i class="fas fa-check-circle"></i> Awarded!';
+                    setTimeout(() => {
+                        actionContainer.style.display = 'none';
+                    }, 1500);
+                } else {
+                    showToast(data.error || 'Failed to award points.', 'error');
+                    newActionBtn.disabled = false;
+                    newActionBtn.innerHTML = `<i class="fas fa-medal"></i> Award 15 Points to ${winner.name}`;
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Network error awarding points.', 'error');
+                newActionBtn.disabled = false;
+                newActionBtn.innerHTML = `<i class="fas fa-medal"></i> Award 15 Points to ${winner.name}`;
+            }
+        });
+    }
 }
 
 function easeOut(t, b, c, d) {

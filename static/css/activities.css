@@ -5,9 +5,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 30px;
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 16px;
+    padding-bottom: 20px;
 }
 
 .activity-back-link {
@@ -16,12 +16,20 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.9rem;
     transition: var(--transition-smooth);
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
 }
 
 .activity-back-link:hover {
-    color: var(--text-primary);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateX(-2px);
 }
 
 .activity-container {
@@ -31,35 +39,42 @@
 
 /* 1. Quiz (BrainBuzz) UI Styling */
 .quiz-progress-container {
-    background: rgba(255, 255, 255, 0.05);
-    height: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    height: 8px;
     border-radius: 9999px;
     overflow: hidden;
-    margin-bottom: 24px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 .quiz-progress-bar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
-    transition: width 0.3s ease;
+    background: var(--primary-gradient);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .quiz-meta-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 .quiz-timer {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--warning);
+    background: rgba(245, 158, 11, 0.1);
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(245, 158, 11, 0.15);
 }
 
 .quiz-question-box {
@@ -67,10 +82,11 @@
 }
 
 .quiz-question-text {
-    font-size: 1.4rem;
+    font-size: 1.45rem;
     color: #ffffff;
-    line-height: 1.4;
-    margin-bottom: 24px;
+    line-height: 1.45;
+    margin-bottom: 30px;
+    font-weight: 700;
 }
 
 .quiz-options-grid {
@@ -80,62 +96,71 @@
 }
 
 .quiz-option-btn {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(17, 24, 39, 0.45);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    padding: 18px 24px;
     color: var(--text-primary);
     text-align: left;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 500;
     cursor: pointer;
     transition: var(--transition-smooth);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    outline: none;
+    font-family: 'Inter', sans-serif;
 }
 
 .quiz-option-btn:hover:not(:disabled) {
-    background: rgba(99, 102, 241, 0.08);
-    border-color: rgba(99, 102, 241, 0.4);
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.4);
     transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.05);
 }
 
 .quiz-option-btn:disabled {
     cursor: not-allowed;
+    opacity: 0.7;
 }
 
 .quiz-option-btn.selected {
-    background: rgba(99, 102, 241, 0.15);
+    background: rgba(59, 130, 246, 0.15);
     border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
 }
 
 .quiz-option-btn.correct {
-    background: rgba(16, 185, 129, 0.15);
-    border-color: var(--success);
-    color: #a7f3d0;
+    background: rgba(16, 185, 129, 0.12) !important;
+    border-color: var(--success) !important;
+    color: #a7f3d0 !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15) !important;
 }
 
 .quiz-option-btn.incorrect {
-    background: rgba(239, 68, 68, 0.15);
-    border-color: var(--danger);
-    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.12) !important;
+    border-color: var(--danger) !important;
+    color: #fca5a5 !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.15) !important;
 }
 
 .quiz-results-card {
     text-align: center;
-    padding: 40px 20px;
+    padding: 50px 30px;
+    background: rgba(17, 24, 39, 0.6);
 }
 
 .quiz-results-score {
-    font-size: 3.5rem;
+    font-size: 3.8rem;
     font-weight: 800;
     color: #ffffff;
     font-family: 'Outfit', sans-serif;
     margin: 20px 0;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
+    background: linear-gradient(135deg, #ffffff 30%, var(--accent) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    letter-spacing: -0.03em;
 }
 
 /* 2. Spin Wheel (HotSeat) UI Styling */
@@ -143,7 +168,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 36px;
     padding: 20px 0;
 }
 
@@ -151,45 +176,51 @@
     position: relative;
     width: 320px;
     height: 320px;
+    padding: 4px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-glow);
 }
 
 #wheelCanvas {
     border-radius: 50%;
-    box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
-    border: 4px solid var(--border-color);
+    border: 4px solid #111827;
+    background: #0f172a;
 }
 
 .wheel-pointer {
     position: absolute;
-    top: -10px;
+    top: -12px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-top: 25px solid var(--danger);
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-top: 26px solid var(--danger);
     z-index: 10;
-    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
 }
 
 .wheel-result {
     font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 800;
     color: #ffffff;
     text-align: center;
-    min-height: 40px;
-    margin-top: 10px;
+    min-height: 48px;
+    font-family: 'Outfit', sans-serif;
 }
 
 .wheel-result span {
     display: inline-block;
-    padding: 6px 20px;
-    background: rgba(99, 102, 241, 0.15);
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    border-radius: 8px;
-    animation: resultPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+    padding: 8px 24px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    animation: resultPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
+    color: #ffffff;
 }
 
 @keyframes resultPop {
@@ -205,26 +236,27 @@
 }
 
 .wordcloud-display {
-    height: 350px;
-    background: rgba(0, 0, 0, 0.2);
+    height: 380px;
+    background: rgba(17, 24, 39, 0.4);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     position: relative;
     overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
 }
 
 .wordcloud-node {
     position: absolute;
     font-family: 'Outfit', sans-serif;
-    font-weight: 700;
+    font-weight: 800;
     cursor: default;
-    transition: transform 0.2s ease, opacity 0.5s ease;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
     user-select: none;
     line-height: 1;
 }
 
 .wordcloud-node:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
     z-index: 20;
 }
 
@@ -236,20 +268,23 @@
     color: var(--text-muted);
     font-size: 1.1rem;
     text-align: center;
+    font-weight: 500;
 }
 
 .wordcloud-input-panel {
-    max-width: 500px;
+    max-width: 550px;
     margin: 0 auto;
     width: 100%;
+    background: rgba(17, 24, 39, 0.55);
 }
 
 /* Floating Animations for Words */
 @keyframes floatWord {
     0% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
+    50% { transform: translateY(-6px); }
     100% { transform: translateY(0px); }
 }
 .floating-word {
-    animation: floatWord 4s ease-in-out infinite;
+    animation: floatWord 5s ease-in-out infinite;
 }
+

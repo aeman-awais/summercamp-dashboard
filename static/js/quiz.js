@@ -26,6 +26,14 @@ if (quizStartBtn) {
     quizStartBtn.addEventListener('click', startQuiz);
 }
 
+const quizRetryBtn = document.getElementById('quizRetryBtn');
+if (quizRetryBtn) {
+    quizRetryBtn.addEventListener('click', () => {
+        quizResults.classList.add('hidden');
+        startQuiz();
+    });
+}
+
 async function startQuiz() {
     quizIntro.classList.add('hidden');
     quizPlay.classList.remove('hidden');

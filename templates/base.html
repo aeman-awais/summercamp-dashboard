@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Mediatiz Summer Camp{% endblock %}</title>
+    <title>{% block title %}BOT AND BYTE CAMP 2026 - SEASON 2{% endblock %}</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +20,10 @@
     <header>
         <div class="nav-container">
             <a href="/" class="logo">
-                <i class="fas fa-campground"></i> MEDIATIZ CAMP
-            </a>
+                <img src="{{ url_for('static', filename='images/mediatiz_foundation_logo.png') }}" alt="Logo" class="nav-logo">
+    BOT AND BYTE CAMP 2026 - SEASON 2
+</a>
+    
             <ul class="nav-menu">
                 <li><a href="/" class="nav-link">Home</a></li>
                 <li><a href="/leaderboard" class="nav-link">Leaderboard</a></li>
@@ -64,8 +66,21 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 Mediatiz Summer Camp. Engineered with <i class="fas fa-heart" style="color: var(--danger)"></i> for Future Coders.</p>
-    </footer>
+<footer>
+    <p>
+        &copy; 2026 BOT AND BYTE CAMP - SEASON 2.
+        Empowering Future Innovators with
+        <i class="fas fa-heart" style="color: var(--danger)"></i>
+        and Technology.
+        |
+        <a href="/instructor/login"
+           style="color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s;"
+           onmouseover="this.style.color='#ffffff'"
+           onmouseout="this.style.color='var(--text-muted)'">
+            Instructor Access
+        </a>
+    </p>
+</footer> 
 
     <!-- Global JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
