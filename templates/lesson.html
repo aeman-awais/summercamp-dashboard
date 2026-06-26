@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Lesson {{ lesson_id }}{% endblock %}
+
+{% block content %}
+
+<div class="glass-panel">
+    <h1>Lesson {{ lesson_id }}</h1>
+    <p>Choose an activity.</p>
+</div>
+
+<div class="activities-grid">
+
+{% for i in range(1,6) %}
+<div class="glass-panel activity-card">
+    <h3>Activity {{ i }}</h3>
+
+    <a href="/lesson/{{ lesson_id }}/activity/{{ i }}"
+       class="btn btn-primary">
+       Start Activity
+    </a>
+</div>
+{% endfor %}
+
+</div>
+
+{% endblock %}

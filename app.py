@@ -287,6 +287,16 @@ def leaderboard():
 # Activities Routes
 # -----------------
 
+@app.route('/activities')
+def activities():
+    return render_template('activities.html')
+
+
+@app.route('/lesson/<int:id>')
+def lesson(id):
+    return render_template('lesson.html', lesson_id=id)
+
+
 @app.route('/activity/brainbuzz')
 def brainbuzz():
     if 'role' not in session:

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Activities | BOT AND BYTE CAMP{% endblock %}
+
+{% block content %}
+
+<div class="glass-panel">
+    <h1 class="hero-title">Learning Activities</h1>
+    <p class="hero-subtitle">
+        Explore all 30 lessons and complete exciting activities.
+    </p>
+</div>
+
+<div class="lessons-grid">
+
+{% for i in range(1,31) %}
+<div class="glass-panel lesson-card">
+    <h2>Lesson {{ i }}</h2>
+    <p>5 Interactive Activities</p>
+
+    <a href="/lesson/{{ i }}" class="btn btn-primary">
+        Open Lesson
+    </a>
+</div>
+{% endfor %}
+
+</div>
+
+{% endblock %}

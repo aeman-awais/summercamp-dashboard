@@ -478,3 +478,29 @@ footer {
     }
 }
 
+.lessons-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+    margin-top:40px;
+}
+
+.lesson-card{
+    padding:30px;
+    text-align:center;
+    transition:0.3s;
+}
+
+.lesson-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+
+.lesson-card h2{
+    color:white;
+    margin-bottom:15px;
+}
+
+.lesson-card p{
+    color:#94a3b8;
+}
